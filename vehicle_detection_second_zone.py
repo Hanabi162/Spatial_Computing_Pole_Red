@@ -8,7 +8,6 @@ from pathlib import Path
 
 image_folder = r"C:\Dataset"
 
-        
 def Spatial_Computing_Pole_Red(image):
     verticesAll = np.array([[0, 420], [330, 310], [790, 420], [1200,520], [1650,650],
                             [2000,780], [2100,830], [2800,1150], [2700,2100], [1500, 2100],
@@ -234,7 +233,6 @@ def Spatial_Computing_Pole_Red(image):
                 'time': 'night',
                 'night_Triyangyas': night_Triyangyas
         }
-        
 
 def read_images(image_folder):
     source = Path(image_folder)
