@@ -15,7 +15,7 @@ This project focuses on detecting vehicles in specific areas of an image using O
 
 2. **Run the Script:**
     ```bash
-    python vehicle_detection.py
+    python vehicle_detection_second_zone.py
     ```
 
 3. **Database Configuration:** Update the database connection details in the script where indicated. Connection details are hidden for security reasons.
