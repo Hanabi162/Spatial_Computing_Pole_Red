@@ -4,13 +4,12 @@ import os
 import time
 import pyodbc
 from pathlib import Path
-from Database_connect import db_server,db_database,db_username,db_password,sys_info # Secret
+# I don't want to show the database connection details in this script on GitHub
 
-image_folder = r"C:\Users\ARoumpattana\Desktop\OCR\KP_OCR\Spatial_Computing_VSCODE_Pole_Red\Dataset_Pole_Red"
+image_folder = r"C:\Dataset"
 
         
 def Spatial_Computing_Pole_Red(image):
-    # Polyline แบบเต็มพิกัด
     verticesAll = np.array([[0, 420], [330, 310], [790, 420], [1200,520], [1650,650],
                             [2000,780], [2100,830], [2800,1150], [2700,2100], [1500, 2100],
                         [950,2050], [420,1375], [290,1220]], dtype=np.int32)
@@ -52,8 +51,8 @@ def Spatial_Computing_Pole_Red(image):
     if mean_brightness >= 100:
         def Section1():
             maskSecOne = np.zeros_like(image[:, :, 0])
-            cv2.fillPoly(maskSecOne, [verticesSecOne], 255)  # เอาแค่พื้นที่ใน Polyline SecOne
-            masked_image_sec_one = cv2.bitwise_and(image, image, mask=maskSecOne)  # ประมวลผลภาพเฉพาะพื้นที่ SecOne
+            cv2.fillPoly(maskSecOne, [verticesSecOne], 255) 
+            masked_image_sec_one = cv2.bitwise_and(image, image, mask=maskSecOne)  
             draw_Polylines(image, verticesSecOne, (255, 0, 0), 5)
             print("Day time Algorithm")
             
@@ -112,8 +111,8 @@ def Spatial_Computing_Pole_Red(image):
 
         def Section2():
             maskSecTwo = np.zeros_like(image[:, :, 0])
-            cv2.fillPoly(maskSecTwo, [verticesSecTwo], 255)  # เอาแค่พื้นที่ใน Polyline SecTwo
-            masked_image_sec_two = cv2.bitwise_and(image, image, mask=maskSecTwo)  # ประมวลผลภาพเฉพาะพื้นที่ SecTwo
+            cv2.fillPoly(maskSecTwo, [verticesSecTwo], 255)  
+            masked_image_sec_two = cv2.bitwise_and(image, image, mask=maskSecTwo)  
             draw_Polylines(image, verticesSecTwo, (0, 255, 0), 5)
             
             gray_image_sec_two = cv2.cvtColor(masked_image_sec_two, cv2.COLOR_BGR2GRAY)
@@ -129,12 +128,10 @@ def Spatial_Computing_Pole_Red(image):
         maskSecMid, container_area_sec_mid, morphed_image_sec_mid = Sectionmid()
         maskSecTwo, morphed_image_sec_two = Section2()
     
-        # นับจำนวนพิกเซลที่มีค่า 255 (พื้นที่ว่าง) ภายใน Polyline
         empty_pixel_count_sec_one = cv2.countNonZero(morphed_image_sec_one & maskSecOne) - container_area_sec_one
         empty_pixel_count_sec_mid = cv2.countNonZero(morphed_image_sec_mid & maskSecMid) - container_area_sec_mid
         empty_pixel_count_sec_two = cv2.countNonZero(morphed_image_sec_two & maskSecTwo)
         
-        # คำนวณพื้นที่
         total_pixel_count_sec_one = cv2.countNonZero(maskSecOne)
         total_pixel_count_sec_mid = cv2.countNonZero(maskSecMid)
         total_pixel_count_sec_two = cv2.countNonZero(maskSecTwo)
@@ -161,8 +158,8 @@ def Spatial_Computing_Pole_Red(image):
     else:
         def Section1():
             maskSecOne = np.zeros_like(image[:, :, 0])
-            cv2.fillPoly(maskSecOne, [verticesSecOne], 255)  # เอาแค่พื้นที่ใน Polyline SecOne
-            masked_image_sec_one = cv2.bitwise_and(image, image, mask=maskSecOne)  # ประมวลผลภาพเฉพาะพื้นที่ SecOne
+            cv2.fillPoly(maskSecOne, [verticesSecOne], 255)  
+            masked_image_sec_one = cv2.bitwise_and(image, image, mask=maskSecOne) 
             draw_Polylines(image, verticesSecOne, (255, 0, 0), 5)
             print("Night time Algorithm")
             
@@ -209,12 +206,10 @@ def Spatial_Computing_Pole_Red(image):
         maskSecMid, morphed_image_sec_mid = Sectionmid()
         maskSecTwo, morphed_image_sec_two = Section2()
         
-        # นับจำนวนพิกเซลที่มีค่า 255 (พื้นที่ว่าง) ภายใน Polyline
         used_pixel_count_sec_one = cv2.countNonZero(morphed_image_sec_one & maskSecOne)
         used_pixel_count_sec_mid = cv2.countNonZero(morphed_image_sec_mid & maskSecMid)
         used_pixel_count_sec_two = cv2.countNonZero(morphed_image_sec_two & maskSecTwo)
 
-        # คำนวณพื้นที่
         total_pixel_count_sec_one = cv2.countNonZero(maskSecOne)
         total_pixel_count_sec_mid = cv2.countNonZero(maskSecMid)
         total_pixel_count_sec_two = cv2.countNonZero(maskSecTwo)
@@ -245,7 +240,7 @@ def read_images(image_folder):
     source = Path(image_folder)
     cctv_id = os.path.basename(source)[:11]
     
-    cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+db_server+';DATABASE='+db_database+';UID='+db_username+';PWD='+ db_password)
+    cnxn = pyodbc.connect(# Do Not Show Connection Details)
     cursor = cnxn.cursor()
     
     if os.path.exists(image_folder):
@@ -272,9 +267,10 @@ def read_images(image_folder):
                     else:
                         Triyangyas = result['night_Triyangyas']
                     
-                    otran_sqlstr_1 = f"INSERT INTO OCR_TRANSACTIONS (otrans_id,otrans_cctv_id,otrans_source_path,otrans_source_name,otrans_sys_info"
-                    otran_sqlstr_2 = f",otrans_detects) VALUES (NEXT VALUE FOR OTRANS_SEQ,'" + cctv_id + "','" + str(source) + "','" + os.path.basename(image_path) + "','" + str(sys_info) + "','" + str(Triyangyas) + "'"
-                    otran_sqlstr_3 = f")"
+                    otra_sqlstr_1 = "Not showing string concatenation"
+                    otra_sqlstr_2 = "Not showing string concatenation"
+                    otra_sqlstr_3 = "Not showing string concatenation"
+
                     otran_sqlstr = otran_sqlstr_1 + otran_sqlstr_2 + otran_sqlstr_3
                     
                     print(otran_sqlstr)
