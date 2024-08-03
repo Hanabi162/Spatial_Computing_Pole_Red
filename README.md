@@ -10,26 +10,6 @@ This project is designed to process images for vehicle detection within specific
 - **Database Integration:** Saves detection results to a SQL Server database. (Database connection details are abstracted for security reasons.)
 - **Image Management:** Processes images from a specified directory and removes them after processing.
 
-## Requirements
-- Python 3.x
-- OpenCV
-- NumPy
-- pyodbc
-
-## Installation
-1. Clone this repository:
-    ```bash
-    git clone https://github.com/yourusername/yourrepository.git
-    cd yourrepository
-    ```
-
-2. Install the required Python packages:
-    ```bash
-    pip install opencv-python numpy pyodbc
-    ```
-
-3. Ensure that you have a SQL Server instance running and configure the connection details in the script.
-
 ## Usage
 1. **Prepare Your Images:** Place your images in the designated input folder (`image_folder`).
 
@@ -54,4 +34,3 @@ The script outputs vehicle detection results in percentage terms, depending on w
 ## Troubleshooting
 - **Image Not Read:** Ensure the image path is correct and the file is not corrupted.
 - **Database Connection Errors:** Verify your SQL Server configuration and connection details.
-
