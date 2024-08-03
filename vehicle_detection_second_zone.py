@@ -240,7 +240,7 @@ def read_images(image_folder):
     source = Path(image_folder)
     cctv_id = os.path.basename(source)[:11]
     
-    cnxn = pyodbc.connect(# Do Not Show Connection Details)
+    cnxn = pyodbc.connect('Do Not Show Connection Details')
     cursor = cnxn.cursor()
     
     if os.path.exists(image_folder):
